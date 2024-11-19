@@ -1,0 +1,53 @@
+################################################
+# Ray-Tracing: Ray-Triangle Intersection       #
+################################################
+
+# Triangle Points
+point_0_x = -1.0
+point_0_y = -1.0
+point_0_z = 0.0
+point_1_x = 0.0
+point_1_y = 1.0
+point_1_z = 0.0
+point_2_x = 1.0
+point_2_y = -1.0
+point_2_z = 0.0
+
+# Ray Config
+ray_origin_x = 0.0
+ray_origin_y = 0.0
+ray_origin_z = -5.0
+
+ray_direction_x = 0.0
+ray_direction_y = 0.0
+ray_direction_z = 1.0
+
+ray_direction_norm = @((ray_direction_x ** 2) + (ray_direction_y ** 2) + (ray_direction_z ** 2))
+
+ray_direction_x = ray_direction_x / ray_direction_norm
+ray_direction_y = ray_direction_y / ray_direction_norm
+ray_direction_z = ray_direction_z / ray_direction_norm
+
+# Cramer's Rule to calculate barycentric coefficients
+det_A =         ((point_0_x - point_1_x) * (((point_0_y - point_2_y) * (ray_direction_z)) - ((point_0_z - point_2_z) * (ray_direction_y))))
+det_A = det_A + ((point_0_y - point_1_y) * (((ray_direction_x) * (point_0_z - point_2_z)) - ((point_0_x - point_2_x) * (ray_direction_z))))
+det_A = det_A + ((point_0_z - point_1_z) * (((point_0_x - point_2_x) * (ray_direction_y)) - ((point_0_y - point_2_y) * (ray_direction_x))))
+
+beta =        ((point_0_x  - ray_origin_x) * (((point_0_y - point_2_y) * (ray_direction_z)) - ((point_0_z - point_2_z) * (ray_direction_y))))
+beta = beta + ((point_0_y  - ray_origin_y) * (((ray_direction_x) * (point_0_z - point_2_z)) - ((point_0_x - point_2_x) * (ray_direction_z))))
+beta = beta + ((point_0_z  - ray_origin_z) * (((point_0_x - point_2_x) * (ray_direction_y)) - ((point_0_y - point_2_y) * (ray_direction_x))))
+beta = beta / det_A
+
+gamma =         ((ray_direction_z) * (((point_0_x - point_1_x) * (point_0_y  - ray_origin_y)) - ((point_0_x  - ray_origin_x) * (point_0_y - point_1_y))))
+gamma = gamma + ((ray_direction_y) * (((point_0_x  - ray_origin_x) * (point_0_z - point_1_z)) - ((point_0_x - point_1_x) * (point_0_z  - ray_origin_z))))
+gamma = gamma + ((ray_direction_x) * (((point_0_y - point_1_y) * (point_0_z  - ray_origin_z)) - ((point_0_y  - ray_origin_y) * (point_0_z - point_1_z))))
+gamma = gamma / det_A
+
+t =     ((point_0_z - point_2_z) * (((point_0_x - point_1_x) * (point_0_y  - ray_origin_y)) - ((point_0_x  - ray_origin_x) * (point_0_y - point_1_y))))
+t = t + ((point_0_y - point_2_y) * (((point_0_x  - ray_origin_x) * (point_0_z - point_1_z)) - ((point_0_x - point_1_x) * (point_0_z  - ray_origin_z))))
+t = t + ((point_0_x - point_2_x) * (((point_0_y - point_1_y) * (point_0_z  - ray_origin_z)) - ((point_0_y  - ray_origin_y) * (point_0_z - point_1_z))))
+t = -t / det_A
+
+# Evaluate coefficients
+"Does the ray intersect the triangle?"
+not (t < 0 or t > 50 or gamma < 0 or gamma > 1 or beta < 0 or (beta > 1 - gamma))

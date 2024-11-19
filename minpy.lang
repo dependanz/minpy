@@ -1,0 +1,74 @@
+statement_list:
+    |   statement [ statement_list ]
+
+statement:
+    |   assignment_statement "\n"
+    |   print_statement "\n"
+
+assignment_statement:
+    |   variable "=" expression
+
+variable:
+    |   IDENT
+
+print_statement:
+    |   expression
+
+expression:
+    |   conjunction
+
+conjunction:
+    |   disjunction [ "and" conjunction ]
+
+disjunction:
+    |   relation [ "or" disjunction ]
+
+relation:
+    |   addition [ ( "==" | ">=" | "<=" | "<" | ">" ) addition ]
+
+addition:
+    |   product [ ( "+" | "-" ) addition ]
+
+product:
+    |   exponential [ ( "*" | "/" | "//" ) product ]
+
+exponential:
+    |   unary [ "**" exponential ]
+
+unary:
+    |   { ("not" | "+" | "-" | "@")  } atomic
+
+atomic:
+    |   IDENT
+    |   INTEGER
+    |   REAL
+    |   STRING
+    |   CHAR
+    |   BOOLEAN
+    |   "(" expression ")"
+
+################################
+# Atomics                      #
+################################
+IDENT:
+    |   ("_" | <re "[a-zA-Z]">){("_" | <re "[a-zA-Z0-9]">)}
+
+INTEGER:
+    |   "0"
+    |   <re "[1-9]"> {<re "[0-9]">}
+
+REAL:
+    |   INTEGER ("e" | "E")     [("+" | "-")] INTEGER
+    |   INTEGER   "." [<re "[0-9]+">] [("e" | "E") [("+" | "-")] INTEGER]
+    |   [INTEGER] "."  <re "[0-9]+">  [("e" | "E") [("+" | "-")] INTEGER]
+
+STRING:
+    |   '"' <re "."> <re ".*"> '"'
+    |   "'" <re "."> <re ".*"> "'"
+
+CHAR:
+    |   "'" <re "."> "'"
+
+BOOLEAN
+    |   "True"
+    |   "False"
