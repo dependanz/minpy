@@ -52,10 +52,7 @@ class Value {
 	}
 	void setString(char const * cstr) {
 		vtype = VALUE_TYPE_STRING;
-		data = malloc(sizeof(std::string));
-		if(cstr != "") {
-			*((std::string*)data) = cstr;
-		}
+		data = new std::string(cstr);
 	}
 	void setChar(char c) {
 		vtype = VALUE_TYPE_CHARACTER;

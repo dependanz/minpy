@@ -190,7 +190,6 @@ LexItem Tokenizer::GetNextToken(std::istream& in, int& linenum) {
                     RETURN_LEXITEM(Token::STRING);
                 }
                 if(c == '\n') {
-                    linenum++;
                     RETURN_LEXITEM(ERR);
                 }
                 currentLexeme += c;
@@ -206,7 +205,6 @@ LexItem Tokenizer::GetNextToken(std::istream& in, int& linenum) {
                     RETURN_LEXITEM(Token::STRING);
                 }
                 if(c == '\n') {
-                    linenum++;
                     RETURN_LEXITEM(ERR);
                 }
                 currentLexeme += c;
